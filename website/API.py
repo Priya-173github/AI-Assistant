@@ -1,5 +1,8 @@
 import google.generativeai as genai
 import os
+from flask import Blueprint, jsonify
+api = Blueprint('api', __name__)
+
 
 def configure_api():
     api_key = "AIzaSyDbSOCsLjSVrHwoULWqv_1STArQU9ZGvMI"
@@ -29,3 +32,16 @@ def summarize_text(model, input_text):
     convo = model.start_chat(history=[])
     convo.send_message(input_text)
     return convo.last.text
+
+from website.Scraper import get_upcoming_conferences
+
+@api.route('/api/conferences')
+def conferences():
+    try:
+        data = get_upcoming_conferences()
+        return jsonify(data)
+    except Exception as e:
+        import traceback
+        print("Scraper crashed with error:")
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500

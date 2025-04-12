@@ -7,6 +7,10 @@ import re
 
 views = Blueprint('views', __name__)
 
+@views.route('/conferences')
+def conferences_page():
+    return render_template('conferences.html')
+
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():

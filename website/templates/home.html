@@ -51,6 +51,7 @@
 
 <body class="text-gray-800 font-sans">
   <div class="blob"></div>
+
   <!-- Navbar -->
   <header class="w-full border-b border-gray-200 shadow-sm sticky top-0 bg-white z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -63,7 +64,7 @@
         <a href="/search" class="hover:text-blue-600">Paper Discovery</a>
         <a href="/grants" class="hover:text-blue-600">Grants</a>
         <a href="/feed" class="hover:text-blue-600">Community</a>
-      
+        <a href="/conferences" class="hover:text-blue-600">Upcoming Conferences</a>
         {% if current_user.is_authenticated %}
         <div x-data="{ open: false }" class="relative ml-4">
           <button @click="open = !open" class="text-sm px-4 py-2 bg-gray-100 text-gray-800 font-semibold rounded hover:bg-gray-200 transition">
@@ -81,7 +82,6 @@
 
   <!-- Hero Section -->
   <section class="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-10 items-center">
-    <!-- Text -->
     <div class="space-y-6 glass-card">
       <h1 id="typeit" class="text-4xl md:text-5xl font-bold leading-tight text-gray-900 min-h-[6rem]">
         <!-- Typing effect will be injected here -->
@@ -96,8 +96,6 @@
         </a>
       </div>
     </div>
-
-    <!-- Hero Image -->
     <div class="hidden md:block">
       <img src="/static/images/man.jpg" alt="Hero Illustration" class="w-full max-w-md mx-auto animate-fade-in">
     </div>

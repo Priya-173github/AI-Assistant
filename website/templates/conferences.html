@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upcoming Conferences | AIRA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/static/images/nexusLogo.png" type="image/png">
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold text-center custom-blue-text mb-10">Upcoming Conferences</h1>
+
+    <div id="conference-container" class="grid gap-6 md:grid-cols-3">
+      <p class="text-sm text-gray-500">Loading conferences...</p>
+    </div>
+  </div>
+
+  <script>
+    async function loadConferences() {
+      try {
+        const res = await fetch('/api/conferences');
+        const data = await res.json();
+        const container = document.getElementById('conference-container');
+        container.innerHTML = '';
+
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach(conf => {
+            const card = document.createElement('div');
+            card.className = "bg-white shadow-md rounded-lg p-4 border border-gray-200";
+            card.innerHTML = `
+              <h3 class="text-lg font-semibold">${conf.title}</h3>
+              <p class="text-sm text-gray-600">📅 ${conf.date} | 📍 ${conf.location}</p>
+              <a href="${conf.link}" target="_blank" class="text-sm text-blue-600 mt-2 inline-block">Learn More</a>
+            `;
+            container.appendChild(card);
+          });
+        } else {
+          container.innerHTML = '<p class="text-sm text-gray-500">No conferences found right now.</p>';
+        }
+      } catch (err) {
+        document.getElementById('conference-container').innerHTML = '<p class="text-sm text-red-500">Error loading conferences.</p>';
+      }
+    }
+
+    loadConferences();
+  </script>
+</body>
+</html>
