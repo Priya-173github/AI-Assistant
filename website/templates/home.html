@@ -7,6 +7,7 @@
   <title>AIRA - Accelerate Research</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/typeit@8.7.1/dist/index.umd.js"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <link rel="icon" href="/static/images/nexusLogo.png" type="image/png">
   <style>
     body {
@@ -62,11 +63,17 @@
         <a href="/search" class="hover:text-blue-600">Paper Discovery</a>
         <a href="/grants" class="hover:text-blue-600">Grants</a>
         <a href="/feed" class="hover:text-blue-600">Community</a>
-
+      
         {% if current_user.is_authenticated %}
-        <a href="/logout" class="ml-4 text-sm px-4 py-2 bg-red-100 text-red-600 font-semibold rounded hover:bg-red-200 transition">
-          Logout
-        </a>
+        <div x-data="{ open: false }" class="relative ml-4">
+          <button @click="open = !open" class="text-sm px-4 py-2 bg-gray-100 text-gray-800 font-semibold rounded hover:bg-gray-200 transition">
+            Profile
+          </button>
+          <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10">
+            <a href="/history" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">User History</a>
+            <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-100">Logout</a>
+          </div>
+        </div>
         {% endif %}
       </nav>
     </div>
