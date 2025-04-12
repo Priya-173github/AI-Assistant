@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User History</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .fade-in { animation: fadeIn 0.6s ease-in-out; }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .tag { background: #e2e8f0; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #1e293b; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-gray-100 text-gray-800 min-h-screen">
+
+<section class="max-w-5xl mx-auto px-6 py-12">
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-extrabold text-blue-900 mb-4 fade-in">📜 Your Activity History</h1>
+    <p class="text-md text-gray-600 max-w-2xl mx-auto fade-in">Here’s a log of your recently viewed research papers and search queries.</p>
+  </div>
+
+  <!-- Recently Viewed Papers -->
+  <div class="mb-10 fade-in bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-semibold text-blue-800 mb-4">📄 Recently Viewed Papers</h2>
+    <ul class="space-y-4">
+      <li class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 transition">
+        <h3 class="font-bold text-blue-600 hover:underline cursor-pointer">Paper Title One</h3>
+        <p class="text-sm text-gray-600">Viewed on April 11, 2025</p>
+        <a href="/paper/1" class="text-sm text-blue-500 hover:underline">View Again</a>
+      </li>
+      <!-- Add more paper entries dynamically here -->
+    </ul>
+  </div>
+
+  <!-- Recent Search History -->
+  <div class="fade-in bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-semibold text-purple-800 mb-4">🔍 Recent Search Queries</h2>
+    <ul class="space-y-2">
+      <li class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
+        <span class="text-gray-700">AI in Medical Diagnosis</span>
+        <span class="text-xs text-gray-500">April 10, 2025</span>
+      </li>
+      <li class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
+        <span class="text-gray-700">Quantum Computing Advances</span>
+        <span class="text-xs text-gray-500">April 9, 2025</span>
+      </li>
+      <!-- Add more queries dynamically here -->
+    </ul>
+  </div>
+</section>
+
+</body>
+</html>
