@@ -4,7 +4,6 @@ from . import Scraper
 from . import API
 import logging
 import re
-from .models import SearchedQuery
 from datetime import datetime
 from . import db
 
