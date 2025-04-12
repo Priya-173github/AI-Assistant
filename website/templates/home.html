@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIRA - Accelerate Research</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typeit@8.7.1/dist/index.umd.js"></script>
+  <link rel="icon" href="/static/images/nexusLogo.png" type="image/png">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f4ff, #ffffff);
+      position: relative;
+      overflow-x: hidden;
+    }
+    .custom-blue {
+      background-color: rgb(63, 89, 99);
+    }
+    .custom-blue-text {
+      color: rgb(63, 89, 99);
+    }
+    .custom-blue-hover:hover {
+      background-color: rgb(53, 76, 84);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .blob {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle at center, rgba(63,89,99,0.3) 0%, transparent 70%);
+      z-index: -1;
+      animation: blobMotion 8s ease-in-out infinite alternate;
+      border-radius: 50%;
+    }
+    @keyframes blobMotion {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(100px, 50px) scale(1.2); }
+    }
+  </style>
+</head>
+
+<body class="text-gray-800 font-sans">
+  <div class="blob"></div>
+  <!-- Navbar -->
+  <header class="w-full border-b border-gray-200 shadow-sm sticky top-0 bg-white z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <img src="/static/images/nexusLogo.png" alt="AIRA Logo" class="w-10 h-10">
+        <span class="text-xl font-semibold tracking-wide">AIRA</span>
+      </div>
+      <nav class="hidden md:flex gap-6 text-sm items-center">
+        <a href="/" class="hover:text-blue-600">Home</a>
+        <a href="/search" class="hover:text-blue-600">Paper Discovery</a>
+        <a href="/grants" class="hover:text-blue-600">Grants</a>
+        <a href="/feed" class="hover:text-blue-600">Community</a>
+
+        {% if current_user.is_authenticated %}
+        <a href="/logout" class="ml-4 text-sm px-4 py-2 bg-red-100 text-red-600 font-semibold rounded hover:bg-red-200 transition">
+          Logout
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-10 items-center">
+    <!-- Text -->
+    <div class="space-y-6 glass-card">
+      <h1 id="typeit" class="text-4xl md:text-5xl font-bold leading-tight text-gray-900 min-h-[6rem]">
+        <!-- Typing effect will be injected here -->
+      </h1>
+      <p class="text-lg text-gray-700 max-w-xl">
+        A one-stop platform for academic researchers to explore papers, find grants,
+        and collaborate with like-minded innovators – all powered by AI.
+      </p>
+      <div>
+        <a href="/search" class="inline-block px-6 py-3 custom-blue text-white font-medium rounded-lg custom-blue-hover transition transform hover:scale-105">
+          Start Exploring
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hidden md:block">
+      <img src="/static/images/man.jpg" alt="Hero Illustration" class="w-full max-w-md mx-auto animate-fade-in">
+    </div>
+  </section>
+
+  <script>
+    new TypeIt("#typeit", {
+      speed: 60,
+      waitUntilVisible: true
+    })
+      .type("Accelerate Your ")
+      .pause(300)
+      .type("<span class='custom-blue-text'>Discoveries</span><br/>with AIRA", { html: true })
+      .go();
+  </script>
+</body>
+
+</html>

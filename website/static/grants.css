@@ -1,0 +1,84 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+html {
+    font-size: 62.5%;  /* 1rem = 10px */
+}
+
+body {
+    background-color: #2a201c;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%; /* Responsive width */
+    max-width: 960px; /* Maximum width */
+}
+
+h2 {
+    font-size: 3.6rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 2rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+select {
+    padding: 1rem;
+    font-size: 1.6rem;
+    border-radius: 5px;
+    border: 1px solid #d3ad7f;
+    background-color: transparent;
+    color: #000000;
+    text-align-last: center;
+    width: 50%;
+    margin: 1rem 0; /* Added margin for spacing */
+}
+
+table {
+    width: 100%;
+    
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+table th, table td {
+    padding: 1.5rem;
+    border: 1px solid #d3ad7f;
+    text-align: left;
+}
+
+table th {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 2rem; /* Increased for better readability */
+}
+
+table td {
+    font-size: 1.8rem;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hidden {
+    display: none;
+}

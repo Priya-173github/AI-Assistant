@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+    <nav class="navbar">
+       <div class="navbar-left">
+        <a href="index.html" class="logo"><img src="{{ url_for('static', filename='images/nexusLogo.png') }}" alt="logo"></a>
+        <div class="search-box">
+            <img src="{{ url_for('static', filename='images/search.png') }}">
+            <input type="text" placeholder="Search for anything">
+        </div>
+       </div>
+       <div class="navbar-center">
+        <ul>
+            <li><a href="/" class="active-link"><img src="{{ url_for('static', filename='images/home.png') }}" alt="home"><span>Home</span></a></li>
+            <li><a href="#"><img src="{{ url_for('static', filename='images/network.png') }}" alt="network"> <span>My Network</span></a></li>
+            <li><a href="#"><img src="{{ url_for('static', filename='images/message.png') }}" alt="message"> <span>Messaging</span></a></li>
+            <li><a href="#"><img src="{{ url_for('static', filename='images/notification.png') }}" alt="notification"> <span>Notifications</span></a></li>
+        </ul>
+       </div>
+       <div class="navbar-right">
+        <div class="online">
+        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="nav-profile-img" onclick="toggleMenu()">
+        </div>
+       </div>
+       <div class="profile-menu-wrap" id="profileMenu">
+        <div class="profile-menu">
+            <div class="user-info">
+                <img src="{{ url_for('static', filename='images/profPic.JPG') }}">
+                <div>
+                    <h3>{{user.name}}</h3>
+                    <a href="#">See your profile</a>
+                </div>
+            </div>
+            <hr>
+            <a href="#" class="profile-menu-link">
+                <img src="{{ url_for('static', filename='images/setting.png') }}">
+                <p>Settings & Privacy</p>
+                <span>></span>
+            </a>
+            <a href="#" class="profile-menu-link">
+                <img src="{{ url_for('static', filename='images/help.png') }}">
+                <p>Help & Support</p>
+                <span>></span>
+            </a>
+            <a href="#" class="profile-menu-link">
+                <img src="{{ url_for('static', filename='images/display.png') }}">
+                <p>Display & Accessibility</p>
+                <span>></span>
+            </a>
+            <a href="#" class="profile-menu-link">
+                <img src="{{ url_for('static', filename='images/logout.png') }}">
+                <p>Logout</p>
+                <span>></span>
+            </a>
+        </div>
+       </div>
+    </nav>
+
+    <div class="container">
+        <div class="left-sidebar">
+            <div class="sidebar-profile-box">
+                <img src="{{ url_for('static', filename='images/cover-pic.png') }}" width="100%">
+                <div class="sidebar-profile-info">
+                    <img src="{{ url_for('static', filename='images/profPic.JPG') }}">
+                    <h1>{{user.name}}</h1>
+                    <h3>{{user.desig}}</h3>
+                    <ul>
+                        <li>Your profile views <span>24</span></li>
+                        <li>Your post views <span>128</span></li>
+                        <li>Your Connections <span>108</span></li>
+                    </ul>
+                </div>
+                <div class="sidebar-profile-link">
+                    <a href="#"><img src="{{ url_for('static', filename='images/items.png') }}">My Items</a>
+                    <a href="#"><img src="{{ url_for('static', filename='images/premium.png') }}">Try Premium</a>
+                </div>
+            </div>
+
+            <div class="sidebar-activity" id="sidebarActivity">
+                <h3>RECENT</h3>
+                <a href="#"><img src="{{ url_for('static', filename='images/recent.png') }}">Data Analysis</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/recent.png') }}">UI/UX Design</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/recent.png') }}">Web Development</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/recent.png') }}">Object-Oriented Programming</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/recent.png') }}">Operating Systems</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/recent.png') }}">Platform Technologies</a>
+
+                <h3>GROUPS</h3>
+                <a href="#"><img src="{{ url_for('static', filename='images/group.png') }}">Data Analyst Group</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/group.png') }}">Learn NumPy</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/group.png') }}">Machine Learning Group</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/group.png') }}">Data Science Aspirants</a>
+
+                <h3>HASHTAG</h3>
+                <a href="#"><img src="{{ url_for('static', filename='images/hashtag.png') }}">#dataanalyst</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/hashtag.png') }}">#numpy</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/hashtag.png') }}">#machinelearning</a>
+                <a href="#"><img src="{{ url_for('static', filename='images/hashtag.png') }}">#datascience</a>
+
+                <div class="discover-more-link">
+                    <a href="#">Discover More</a>
+                </div>
+            </div>
+            <p id="showMoreLink" onclick="toggleActivity()">Show more <b>+</b></p>
+        </div>
+
+        <div class="main-content">
+            <div class="create-post">
+                <div class="create-post-input">
+                    <img src="{{ url_for('static', filename='images/profPic.JPG') }}">
+                    <textarea id="postContent" rows="2" placeholder="Write Something"></textarea>
+                </div>
+                <div class="create-post-links">
+                    <li><img src="{{ url_for('static', filename='images/photo.png') }}">Photo</li>
+                    <li><img src="{{ url_for('static', filename='images/video.png') }}">Video</li>
+                    <li><img src="{{ url_for('static', filename='images/event.png') }}">Event</li>
+                    <li onclick="submitPost()">Post</li>
+                </div>
+            </div>
+
+            <div class="sort-by">
+                <hr>
+                <p>Sort by: <span>top <img src="{{ url_for('static', filename='images/down-arrow.png') }}"></span></p>
+            </div>
+
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-3.png') }}">
+                    <div>
+                        <h1>Mayank Verma</h1>
+                        <small>Researcher in Microbiology</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>Our latest research project in separating a special DNA strand has been successfully completed! 🚀 Explore our findings and let's discuss the next steps. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-1.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span class="liked-users">Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}" class="post-activity-arrow-icon">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-4.png') }}">
+                    <div>
+                        <h1>Adnan Kalim</h1>
+                        <small>Senior researcher, Malware identification</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>Our latest research project in identifying malware has been successfully completed! 🚀 Explore our findings and let's discuss the next steps. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-2.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span>Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}" class="post-activity-arrow-icon">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-3.png') }}">
+                    <div>
+                        <h1>Naziya Khan</h1>
+                        <small>Researcher, Microbiology</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>Our latest research project in DNA Modification has been successfully completed! 🚀 Explore our findings and let's discuss the next steps. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-3.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span>Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-3.png') }}">
+                    <div>
+                        <h1>Nikitha Singh</h1>
+                        <small>PhD, Microbiology</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>It is heartwarming to see students perform astounding research in various streams! Please feel free to reach out for any help. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-4.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span>Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div><div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-3.png') }}">
+                    <div>
+                        <h1>Mayank Verma</h1>
+                        <small>Researcher in Microbiology</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>Our latest research project in separating a special DNA strand has been successfully completed! 🚀 Explore our findings and let's discuss the next steps. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-1.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span class="liked-users">Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}" class="post-activity-arrow-icon">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-4.png') }}">
+                    <div>
+                        <h1>Adnan Kalim</h1>
+                        <small>Senior researcher, Malware identification</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>Our latest research project in identifying malware has been successfully completed! 🚀 Explore our findings and let's discuss the next steps. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-2.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span>Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}" class="post-activity-arrow-icon">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-3.png') }}">
+                    <div>
+                        <h1>Naziya Khan</h1>
+                        <small>Researcher, Microbiology</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>Our latest research project in DNA Modification has been successfully completed! 🚀 Explore our findings and let's discuss the next steps. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-3.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span>Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div class="post-author">
+                    <img src="{{ url_for('static', filename='images/user-3.png') }}">
+                    <div>
+                        <h1>Nikitha Singh</h1>
+                        <small>PhD, Microbiology</small>
+                        <small>2 hours ago</small>
+                    </div>
+                </div>
+                <p>It is heartwarming to see students perform astounding research in various streams! Please feel free to reach out for any help. #ResearchMilestone</p>
+                <img src="{{ url_for('static', filename='images/post-image-4.png') }}" width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                        <img src="{{ url_for('static', filename='images/love.png') }}">
+                        <img src="{{ url_for('static', filename='images/clap.png') }}">
+                        <span>Adam Doe and 89 others</span>
+                    </div>
+                    <div>
+                        <span>22 comments &middot; 40 shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                        <img src="{{ url_for('static', filename='images/down-arrow.png') }}">
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/like.png') }}">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/comment.png') }}">
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/share.png') }}">
+                        <span>Share</span>
+                    </div>
+                    <div class="post-activity-link">
+                        <img src="{{ url_for('static', filename='images/send.png') }}">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="right-sidebar">
+            <div class="sidebar-news">
+                <img src="{{ url_for('static', filename='images/more.png') }}" class="info-icon">
+                <h3>Trending News</h3>
+
+                <a href="#">High Demand for Skilled Employees</a>
+                <span>1d ago &middot; 10,934 readers</span>
+
+                <a href="#">Inflation in Canada Affects the Workforce</a>
+                <span>2d ago &middot; 7,043 readers</span>
+
+                <a href="#">Mass Recruiters Fire Employees</a>
+                <span>4d ago &middot; 17,789 readers</span>
+
+                <a href="#">Crypto Predicted to Boom This Year</a>
+                <span>9d ago &middot; 2,436 readers</span>
+
+                <a href="#" class="read-more-link">Read More</a>
+            </div>
+
+            <div class="sidebar-useful-links">
+                <a href="#">About</a>
+                <a href="#">Accessibility</a>
+                <a href="#">Help Center</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Advertising</a>
+                <a href="#">Get the App</a>
+                <a href="#">More</a>
+
+                <div class="copyright-msg">
+                    <img src="{{ url_for('static', filename='images/nexusLogo.png') }}">
+                    <p>AIRA © 2022. All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function submitPost() {
+        let postContent = document.getElementById("postContent").value;
+
+        let newPost = document.createElement("div");
+        newPost.className = "post";
+        newPost.innerHTML = `
+            <div class="post-author">
+                <img src="{{ url_for('static', filename='images/profPic.JPG') }}">
+                <div>
+                    <h1>Deepika Srinivasan</h1>
+                    <small>Researcher</small>
+                    <small>Just Now</small>
+                </div>
+            </div>
+            <p>${postContent}</p>
+            <div class="post-stats">
+                <div>
+                    <img src="{{ url_for('static', filename='images/thumbsup.png') }}">
+                    <img src="{{ url_for('static', filename='images/love.png') }}">
+                    <img src="{{ url_for('static', filename='images/clap.png') }}">
+                    <span class="liked-users">You</span>
+                </div>
+                <div>
+                    <span>0 comments &middot; 0 shares</span>
+                </div>
+            </div>
+            <div class="post-activity">
+                <div>
+                    <img src="{{ url_for('static', filename='images/profPic.JPG') }}" class="post-activity-user-icon">
+                    <img src="{{ url_for('static', filename='images/down-arrow.png') }}" class="post-activity-arrow-icon">
+                </div>
+                <div class="post-activity-link">
+                    <img src="{{ url_for('static', filename='images/like.png') }}">
+                    <span>Like</span>
+                </div>
+                <div class="post-activity-link">
+                    <img src="{{ url_for('static', filename='images/comment.png') }}">
+                    <span>Comment</span>
+                </div>
+                <div class="post-activity-link">
+                    <img src="{{ url_for('static', filename='images/share.png') }}">
+                    <span>Share</span>
+                </div>
+                <div class="post-activity-link">
+                    <img src="{{ url_for('static', filename='images/send.png') }}">
+                    <span>Send</span>
+                </div>
+            </div>
+        `;
+
+        let createPostSection = document.querySelector(".create-post");
+        createPostSection.parentNode.insertBefore(newPost, createPostSection.nextSibling);
+
+        document.getElementById("postContent").value = "";
+    }
+
+    function toggleMenu() {
+        document.getElementById("profileMenu").classList.toggle("open-menu");
+    }
+
+    function toggleActivity() {
+        const sideActivity = document.getElementById("sidebarActivity");
+        const moreLink = document.getElementById("showMoreLink");
+
+        sideActivity.classList.toggle("open-activity");
+
+        if (sideActivity.classList.contains("open-activity")) {
+            moreLink.innerHTML = "Show less <b>-</b>";
+        } else {
+            moreLink.innerHTML = "Show More <b>+</b>";
+        }
+    }
+</script>
+
+</body>
+</html>

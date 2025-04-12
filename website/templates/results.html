@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Results</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; transition: background 0.3s ease, color 0.3s ease; }
+    .text-custom-blue { color: rgb(63, 89, 99); }
+    .fade-in { animation: fadeIn 0.6s ease-in-out; }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .summary-block p { margin-bottom: 1rem; }
+    .summary-block strong {
+      display: block;
+      margin-top: 1.25rem;
+      font-weight: 600;
+      color: rgb(63, 89, 99);
+    }
+    .dark-mode { background-color: #1e293b; color: #f1f5f9; }
+    .dark-mode .summary-block { color: #f1f5f9; }
+    .dark-mode .summary-block strong { color: #facc15; }
+    .dark-mode .text-custom-blue { color: #facc15; }
+    .dark-mode .bg-white { background-color: #334155; }
+    .dark-mode .text-gray-700 { color: #e2e8f0; }
+    .dark-mode .bg-gray-100 { background-color: #475569; }
+    .dark-mode .text-gray-600 { color: #cbd5e1; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-800 min-h-screen" id="body">
+
+  <!-- Floating Outline (dynamically abstracts ke hisaab se render hoga) -->
+  <div class="fixed top-24 left-4 w-48 hidden md:block z-50">
+    <div class="bg-white rounded-lg shadow-lg p-4 border border-gray-200">
+      <h2 class="text-sm font-semibold text-custom-blue mb-3">🧭 Jump to</h2>
+      <ul class="space-y-2 text-sm">
+        {% for i in range(abstracts|length) %}
+        <li><a href="#summary-{{ i }}" class="text-blue-600 hover:underline">Abstract {{ i + 1 }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <div class="text-center mb-10">
+        <!-- Top-right Home Icon -->
+        <div class="absolute top-6 right-6">
+            <a href="/" class="inline-flex items-center text-sm text-custom-blue hover:text-blue-700 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 21V12h6v9" />
+            </svg>
+            Back to Home
+            </a>
+        </div>
+  
+      
+        <!-- Heading -->
+        <h1 class="text-4xl font-extrabold text-custom-blue tracking-tight fade-in inline-flex items-center justify-center gap-2">
+          <span>🔍</span> <span>Search Results</span>
+        </h1>
+      
+        <!-- Buttons -->
+        <div class="mt-6 flex justify-center gap-4">
+          <button onclick="toggleDarkMode()" class="px-4 py-2 text-sm rounded bg-gray-200 hover:bg-gray-300 text-gray-800">🌗 Toggle Dark Mode</button>
+          <button onclick="downloadPDF()" class="px-4 py-2 text-sm rounded bg-blue-600 hover:bg-blue-700 text-white">📄 Download PDF</button>
+        </div>
+      </div>      
+
+    <!-- Dynamic Abstracts Section -->
+    {% if abstracts %}
+      <div class="grid gap-6 fade-in">
+        {% for title, abstract in abstracts %}
+        <div id="summary-{{ loop.index0 }}" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 duration-300 relative">
+          <button onclick="copyToClipboard(this)" class="absolute top-4 right-4 px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded shadow text-gray-600">📋 Copy</button>
+          <h2 class="text-xl font-semibold text-custom-blue mb-3">{{ title }}</h2>
+          <p class="text-gray-700 leading-relaxed text-sm summary-block">{{ abstract }}</p>
+          <button onclick="speakText(this)" class="mt-2 text-xs px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-800 rounded">🔊 Listen</button>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="text-center text-sm text-gray-500 mt-10 fade-in">
+        📄 Abstracts have also been saved to a PDF file (<strong>abstracts.pdf</strong>).
+      </p>
+    {% else %}
+      <div class="text-center py-20 fade-in">
+        <p class="text-xl text-gray-600">😕 No abstracts found for your query.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Related Papers Section (static example) -->
+  <section class="max-w-5xl mx-auto px-4 pt-6 pb-12">
+    <h2 class="text-2xl font-bold text-custom-blue mb-4">🧬 Recommended Papers</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <a href="#" class="block bg-white rounded-xl p-4 shadow hover:shadow-md transition border border-gray-100 hover:border-blue-300">
+        <div class="text-sm text-gray-800 font-semibold">Deep Transfer Learning for Medical Imaging</div>
+      </a>
+      <a href="#" class="block bg-white rounded-xl p-4 shadow hover:shadow-md transition border border-gray-100 hover:border-blue-300">
+        <div class="text-sm text-gray-800 font-semibold">A Survey on Graph Neural Networks</div>
+      </a>
+      <a href="#" class="block bg-white rounded-xl p-4 shadow hover:shadow-md transition border border-gray-100 hover:border-blue-300">
+        <div class="text-sm text-gray-800 font-semibold">Explainable AI: Foundations and Frontiers</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Consolidated JavaScript Section -->
+  <script>
+    // Global variable for speech synthesis state
+    let isSpeaking = false;
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function copyToClipboard(button) {
+        const content = button.parentElement.querySelector('.summary-block').innerText;
+      navigator.clipboard.writeText(content).then(() => {
+        button.innerText = '✅ Copied';
+        setTimeout(() => button.innerText = '📋 Copy', 1500);
+      });
+    }
+
+    function downloadPDF() {
+      const doc = new window.jspdf.jsPDF();
+      let content = "";
+      document.querySelectorAll('.summary-block').forEach((el, i) => {
+        content += `Summary ${i + 1}:\n` + el.innerText + "\n\n";
+      });
+      doc.setFontSize(12);
+      doc.text(content, 10, 10, { maxWidth: 180 });
+      doc.save("abstracts.pdf");
+    }
+
+    function speakText(button) {
+      const summaryBlock = button.parentElement.querySelector('.summary-block');
+      if (!summaryBlock) return;
+
+      // Agar already speaking ho, to cancel karke reset kar dein.
+      if (isSpeaking) {
+        speechSynthesis.cancel();
+        isSpeaking = false;
+        button.innerText = '🔊 Listen';
+        summaryBlock.innerHTML = summaryBlock.textContent; // span wrappers hata dein
+        return;
+      }
+
+      // Original text ko span tags mein wrap karke highlight ke liye prepare karein.
+      const originalText = summaryBlock.textContent;
+      const words = originalText.split(/(\s+)/); // extra backslash nahi
+      summaryBlock.innerHTML = words.map(word => `<span>${word}</span>`).join('');
+      const spans = summaryBlock.querySelectorAll('span');
+
+      // Prepare cumulative character lengths for each word in the spans.
+      let cumulativeLengths = [];
+      let cumSum = 0;
+      words.forEach(word => {
+        cumSum += word.length;
+        cumulativeLengths.push(cumSum);
+      });
+
+      const utterance = new SpeechSynthesisUtterance(originalText);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      isSpeaking = true;
+      button.innerText = '⏹ Stop';
+
+      // onboundary event using charIndex ke hisaab se accurate highlighting
+      utterance.onboundary = (event) => {
+        if (event.name === 'word' || event.charIndex > 0) {
+          let charIndex = event.charIndex;
+          // Determine kaunsa word is charIndex ke andar aata hai.
+          let wordIndex = cumulativeLengths.findIndex(cum => cum >= charIndex);
+          // Remove previous highlights.
+          spans.forEach(span => span.classList.remove('bg-yellow-200'));
+          if (wordIndex !== -1 && spans[wordIndex]) {
+            spans[wordIndex].classList.add('bg-yellow-200');
+          }
+        }
+      };
+
+      // Cleanup on speech end.
+      utterance.onend = () => {
+        spans.forEach(span => span.classList.remove('bg-yellow-200'));
+        isSpeaking = false;
+        button.innerText = '🔊 Listen';
+        summaryBlock.innerHTML = originalText;
+      };
+
+      // Start speech synthesis. Cancel any previous utterance.
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>

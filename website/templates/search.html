@@ -1,0 +1,52 @@
+<!-- Revised Search UI to use different submit buttons -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIRA - Search Papers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/static/images/nexusLogo.png" type="image/png">
+  <style>
+    .custom-blue {
+      background-color: rgb(63, 89, 99);
+    }
+    .custom-blue-hover:hover {
+      background-color: rgb(53, 76, 84);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: scale(1.015);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-tr from-gray-100 via-white to-gray-200 text-gray-800 font-sans">
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    <form id="searchForm" method="POST" class="glass-card space-y-10">
+      <h2 class="text-3xl font-bold text-center">🔍 Explore Research Intelligence</h2>
+      <div class="relative">
+        <input type="text" name="query" id="query" class="peer w-full px-4 pt-6 pb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none placeholder-transparent" placeholder="Enter keyword" required>
+        <label for="query" class="absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-gray-600">e.g. Generative AI in Biology</label>
+      </div>
+      <div class="flex flex-wrap justify-center gap-4 pt-4">
+        <button type="button" onclick="setActionAndSubmit('/search')" class="px-6 py-3 bg-white text-gray-800 font-semibold border border-gray-300 rounded-lg hover:bg-gray-100 transition">📄 List Abstracts</button>
+        <button type="button" onclick="setActionAndSubmit('/process')" class="px-6 py-3 custom-blue text-white font-semibold rounded-lg custom-blue-hover transition">🧠 Summarize via AI</button>
+      </div>
+    </form>
+  </section>
+  <script>
+    function setActionAndSubmit(action) {
+      const form = document.getElementById('searchForm');
+      form.action = action;
+      form.submit();
+    }
+  </script>
+</body>
+</html>
