@@ -72,9 +72,6 @@ from playwright.sync_api import sync_playwright
 import requests
 from bs4 import BeautifulSoup
 
-import requests
-from bs4 import BeautifulSoup
-
 def get_upcoming_conferences(pages_to_scrape=5):
     all_results = []
     
@@ -84,7 +81,7 @@ def get_upcoming_conferences(pages_to_scrape=5):
             response = requests.get(url, timeout=10)
             if response.status_code != 200:
                 print("Failed to fetch WikiCFP page:", url)
-                continue  # Skip to the next page instead of returning early
+                continue  # Skip to the next page
 
             soup = BeautifulSoup(response.text, "html.parser")
             container = soup.find("div", class_="contsec")
@@ -98,7 +95,11 @@ def get_upcoming_conferences(pages_to_scrape=5):
             rows = table.find_all("tr")
 
             for row in rows:
-                # Skip header rows or navigation rows
+                # Convert the row text to lowercase for uniform filtering.
+                row_text = row.get_text(separator=' ', strip=True).lower()
+                # Skip rows that contain navigation or extraneous keywords.
+                if any(keyword in row_text for keyword in ["first", "previous", "next", "last", "page", "total of"]):
+                    continue
                 if row.find("th"):
                     continue
                 
@@ -106,16 +107,16 @@ def get_upcoming_conferences(pages_to_scrape=5):
                 if len(cols) < 4:
                     continue
                 
-                # Check for valid <a> link in the first column
                 link_tag = cols[0].find("a")
                 if not link_tag:
                     continue
+                
                 link_href = link_tag.get("href", "")
-                # Only accept real CFP links
-                if "/cfp/" not in link_href or "servlet" in link_href:
+                # Only accept rows with a proper CFP link.
+                if "/cfp/" not in link_href:
                     continue
 
-                # Extract data
+                # Extract and clean the conference data.
                 title = link_tag.get_text(strip=True)
                 link = "http://www.wikicfp.com" + link_href
                 date_str = cols[1].get_text(strip=True)
@@ -132,9 +133,9 @@ def get_upcoming_conferences(pages_to_scrape=5):
 
         except Exception as e:
             print(f"Error scraping page {url}: {e}")
-            # continue with other pages
+            continue
 
-    # If still no results after scraping multiple pages, return fallback
+    # If no valid results were found, return a fallback message.
     if not all_results:
         return [{
             "title": "No conferences found on WikiCFP",
@@ -145,6 +146,7 @@ def get_upcoming_conferences(pages_to_scrape=5):
         }]
 
     return all_results
+
 
 # def save_abstracts_to_pdf(abstracts, filename="abstracts.pdf"):
 #     html_content = "<html><body>"
