@@ -35,6 +35,10 @@ def search():
 def grants():
     return render_template('grants.html')
 
+@views.route("/history")
+def history():
+    return render_template("history.html")
+
 @views.route('/process', methods=['POST'])
 def process_abstracts():
     try:
