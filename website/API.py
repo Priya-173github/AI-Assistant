@@ -1,6 +1,6 @@
 import google.generativeai as genai
 import os
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 api = Blueprint('api', __name__)
 
 
@@ -33,12 +33,13 @@ def summarize_text(model, input_text):
     convo.send_message(input_text)
     return convo.last.text
 
-from website.Scraper import get_upcoming_conferences
+from website.Scraper import get_conferences_by_topic
 
 @api.route('/api/conferences')
 def conferences():
     try:
-        data = get_upcoming_conferences()
+        topic = request.args.get("topic", "ai")
+        data = get_conferences_by_topic(topic)
         return jsonify(data)
     except Exception as e:
         import traceback

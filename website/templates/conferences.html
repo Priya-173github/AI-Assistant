@@ -6,42 +6,122 @@
   <title>Upcoming Conferences | AIRA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="/static/images/nexusLogo.png" type="image/png">
+  <style>
+    body {
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+    }
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-  <div class="max-w-7xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold text-center custom-blue-text mb-10">Upcoming Conferences</h1>
+<body class="text-gray-800 font-sans relative">
+  <a href="/" class="absolute top-6 right-6 bg-white text-blue-600 border border-blue-500 rounded-full p-2 shadow hover:bg-blue-50 transition" title="Go Home">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.75L12 3l9 6.75M4.5 10.5v9.75h15V10.5M9.75 21V12.75h4.5V21" />
+    </svg>
+  </a>
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-center text-blue-800 mb-8 tracking-wide">🎓 Explore Upcoming Conferences</h1>
 
-    <div id="conference-container" class="grid gap-6 md:grid-cols-3">
-      <p class="text-sm text-gray-500">Loading conferences...</p>
+    <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-10">
+      <form id="searchForm" class="flex w-full max-w-lg">
+        <input type="text" id="searchInput" placeholder="🔍 Search topic e.g. AI, Crypto" class="flex-grow border border-gray-300 px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-700 transition-all">Search</button>
+      </form>
+      <select id="yearFilter" class="border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="all">All Years</option>
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+      </select>
     </div>
+
+    <p id="result-count" class="text-center text-md text-gray-600 mb-6 hidden"></p>
+    <div id="loader" class="text-center text-md text-gray-600 hidden">⏳ Loading conferences...</div>
+    <div id="conference-container" class="grid gap-8 md:grid-cols-3"></div>
   </div>
 
   <script>
-    async function loadConferences() {
-      try {
-        const res = await fetch('/api/conferences');
-        const data = await res.json();
-        const container = document.getElementById('conference-container');
-        container.innerHTML = '';
+    async function loadConferences(topic = null, year = "all") {
+      const container = document.getElementById('conference-container');
+      const loader = document.getElementById('loader');
+      const countDisplay = document.getElementById('result-count');
+      container.innerHTML = '';
+      loader.classList.remove('hidden');
+      countDisplay.classList.add('hidden');
 
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach(conf => {
+      try {
+        let url = '/api/conferences';
+        if (topic) {
+          url += `?topic=${encodeURIComponent(topic)}`;
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+        loader.classList.add('hidden');
+
+        const filtered = data.filter(conf => {
+          const yearMatch = conf.date.match(/\b(20\d{2})\b/);
+          const confYear = yearMatch ? parseInt(yearMatch[1]) : null;
+          return year === "all" || confYear === parseInt(year);
+        });
+
+        if (topic) {
+          countDisplay.textContent = `${filtered.length} conferences found for "${topic}"${year !== "all" ? ` in ${year}` : ''}`;
+          countDisplay.classList.remove('hidden');
+        }
+
+        if (filtered.length > 0) {
+          filtered.slice(0, 15).forEach(conf => {
             const card = document.createElement('div');
-            card.className = "bg-white shadow-md rounded-lg p-4 border border-gray-200";
+            card.className = "glass card";
             card.innerHTML = `
-              <h3 class="text-lg font-semibold">${conf.title}</h3>
-              <p class="text-sm text-gray-600">📅 ${conf.date} | 📍 ${conf.location}</p>
-              <a href="${conf.link}" target="_blank" class="text-sm text-blue-600 mt-2 inline-block">Learn More</a>
+              <h3 class="text-xl font-semibold text-blue-700 mb-2">${conf.title}</h3>
+              <p class="text-sm text-gray-700">📅 <strong>Date:</strong> ${conf.date}</p>
+              <p class="text-sm text-gray-700">📍 <strong>Location:</strong> ${conf.location}</p>
+              <p class="text-sm text-gray-700">🕒 <strong>Deadline:</strong> ${conf.deadline}</p>
+              <a href="${conf.link}" target="_blank" class="mt-3 inline-block text-blue-600 font-medium hover:underline">🔗 Learn More</a>
             `;
             container.appendChild(card);
           });
         } else {
-          container.innerHTML = '<p class="text-sm text-gray-500">No conferences found right now.</p>';
+          container.innerHTML = '<p class="text-sm text-gray-600">No conferences found right now.</p>';
         }
       } catch (err) {
-        document.getElementById('conference-container').innerHTML = '<p class="text-sm text-red-500">Error loading conferences.</p>';
+        loader.classList.add('hidden');
+        container.innerHTML = '<p class="text-sm text-red-500">Error loading conferences.</p>';
+        console.error("Error fetching conferences:", err);
       }
     }
+
+    document.getElementById('searchForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const topic = document.getElementById('searchInput').value.trim();
+      const year = document.getElementById('yearFilter').value;
+      if (topic) {
+        document.getElementById('loader').textContent = `🔎 Searching for "${topic}"...`;
+        loadConferences(topic, year);
+      } else {
+        loadConferences(null, year);
+      }
+    });
+
+    document.getElementById('yearFilter').addEventListener('change', function () {
+      const topic = document.getElementById('searchInput').value.trim();
+      const year = this.value;
+      loadConferences(topic || null, year);
+    });
 
     loadConferences();
   </script>

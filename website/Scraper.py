@@ -72,16 +72,41 @@ from playwright.sync_api import sync_playwright
 import requests
 from bs4 import BeautifulSoup
 
-def get_upcoming_conferences(pages_to_scrape=5):
+def get_event_details(event_url):
+    details = {}
+    try:
+        resp = requests.get(event_url, timeout=10)
+        if resp.status_code != 200:
+            print("Failed to fetch detail page:", event_url)
+            return details
+        soup = BeautifulSoup(resp.text, "html.parser")
+        detail_table = soup.find("table", attrs={"cellpadding": "3"})
+        if not detail_table:
+            return details
+        rows = detail_table.find_all("tr")
+        for row in rows:
+            cols = row.find_all("td")
+            if len(cols) < 2:
+                continue
+            label = cols[0].get_text(strip=True).rstrip(":").lower()
+            value = cols[1].get_text(strip=True)
+            if label in ["when", "where", "deadline"]:
+                details[label] = value
+        return details
+    except Exception as e:
+        print(f"Error fetching details from {event_url}: {e}")
+        return details
+
+def get_conferences_by_topic(topic, pages_to_scrape=3):
     all_results = []
-    
+    topic_encoded = topic.replace(" ", "+")
     for page_number in range(1, pages_to_scrape + 1):
-        url = f"http://www.wikicfp.com/cfp/call?conference=ai&page={page_number}"
+        url = f"http://www.wikicfp.com/cfp/call?conference={topic_encoded}&page={page_number}"
         try:
             response = requests.get(url, timeout=10)
             if response.status_code != 200:
                 print("Failed to fetch WikiCFP page:", url)
-                continue  # Skip to the next page
+                continue
 
             soup = BeautifulSoup(response.text, "html.parser")
             container = soup.find("div", class_="contsec")
@@ -94,59 +119,58 @@ def get_upcoming_conferences(pages_to_scrape=5):
 
             rows = table.find_all("tr")
 
-            for row in rows:
-                # Convert the row text to lowercase for uniform filtering.
-                row_text = row.get_text(separator=' ', strip=True).lower()
-                # Skip rows that contain navigation or extraneous keywords.
-                if any(keyword in row_text for keyword in ["first", "previous", "next", "last", "page", "total of"]):
-                    continue
-                if row.find("th"):
-                    continue
-                
-                cols = row.find_all("td")
-                if len(cols) < 4:
-                    continue
-                
-                link_tag = cols[0].find("a")
+            i = 0
+            while i < len(rows) - 1:
+                row1 = rows[i]
+                row2 = rows[i + 1]
+
+                link_tag = row1.find("a")
                 if not link_tag:
-                    continue
-                
-                link_href = link_tag.get("href", "")
-                # Only accept rows with a proper CFP link.
-                if "/cfp/" not in link_href:
+                    i += 1
                     continue
 
-                # Extract and clean the conference data.
                 title = link_tag.get_text(strip=True)
+                link_href = link_tag.get("href", "")
+                if "/cfp/" not in link_href:
+                    i += 2
+                    continue
+
                 link = "http://www.wikicfp.com" + link_href
-                date_str = cols[1].get_text(strip=True)
-                location = cols[2].get_text(strip=True)
-                deadline = cols[3].get_text(strip=True)
+
+                cols2 = row2.find_all("td")
+                if len(cols2) >= 3:
+                    event_date = cols2[0].get_text(strip=True)
+                    location = cols2[1].get_text(strip=True)
+                    deadline = cols2[2].get_text(strip=True)
+                else:
+                    event_date = location = deadline = ""
 
                 all_results.append({
                     "title": title,
-                    "date": date_str,
-                    "deadline": deadline,
+                    "date": event_date,
                     "location": location,
-                    "link": link
+                    "deadline": deadline,
+                    "link": link,
+                    "topic": topic
                 })
+
+                i += 2
 
         except Exception as e:
             print(f"Error scraping page {url}: {e}")
             continue
 
-    # If no valid results were found, return a fallback message.
     if not all_results:
         return [{
-            "title": "No conferences found on WikiCFP",
+            "title": f"No conferences found for topic: {topic}",
             "date": "",
             "deadline": "",
             "location": "",
-            "link": "#"
+            "link": "#",
+            "topic": topic
         }]
 
-    return all_results
-
+    return all_results  
 
 # def save_abstracts_to_pdf(abstracts, filename="abstracts.pdf"):
 #     html_content = "<html><body>"
