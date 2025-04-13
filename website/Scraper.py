@@ -22,8 +22,9 @@ def fetch_arxiv_abstracts(query, max_results=15):
     for entry in entries:
         title = entry.title.text.strip()
         abstract = entry.summary.text.strip()
+        url = entry.id.text.strip()
 
-        abstracts.append((title, abstract))
+        abstracts.append((title, abstract,url))
 
     return abstracts
 

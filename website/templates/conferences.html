@@ -112,7 +112,14 @@
       if (topic) {
         document.getElementById('loader').textContent = `🔎 Searching for "${topic}"...`;
         loadConferences(topic, year);
-      } else {
+        fetch("/conferences", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ query: topic }),
+        });
+      }else {
         loadConferences(null, year);
       }
     });
